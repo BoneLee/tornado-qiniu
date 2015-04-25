@@ -54,8 +54,28 @@ $(function() {
                 $('#success').show();
             },
             'FileUploaded': function(up, file, info) {
-                var progress = new FileProgress(file, 'fsUploadProgress');
-                progress.setComplete(up, info);
+                // "file":{"id":"o_19jnarsaknlqmcicup1pvpv0g9","name":"5DC87A00d01","type":"","size":4281655,"origSize":4281655,"loaded":4281655,"percent":100,"status":5,"lastModifiedDate":"2011-05-14T10:04:14.000Z"},
+                // "info":"{\"hash\":\"llttAJNZysYH4JlDiuIj6zn1c5Bw\",\"key\":\"5DC87A00d01\"}"
+                // callback is here. when file upload complete.
+
+                var fileInfo = JSON.parse(info);
+                $.post("res/education/upload", { file_name: fileInfo["key"], file_size: file["size"], file_hash: fileInfo["hash"] }, function(data) {
+                    res = JSON.parse(data);
+                    //res = {"error": 1, "content":"上传出错误啦！"};
+                    if(res["error"] === 0){
+                        var progress = new FileProgress(file, 'fsUploadProgress');
+                        progress.setComplete(up, info);
+                    }else{
+                        // TODO FIXME. USE alert window function better.
+                        var progress = new FileProgress(fileInfo["key"], 'fsUploadProgress');
+                        progress.setError();
+                        progress.setStatus(res["content"]);
+                    }
+                });
+
+                //console.log('hello man,a file is uploaded:'+JSON.stringify({"up": up, "file":file, "info": info}));
+                //var progress = new FileProgress(file, 'fsUploadProgress');
+                //progress.setComplete(up, info);
             },
             'Error': function(up, err, errTip) {
                 $('table').show();
