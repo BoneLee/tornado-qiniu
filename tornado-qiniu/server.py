@@ -86,14 +86,15 @@ class EduResourceUploadHandler(BaseHandler):
             file_size = long(file_size)
             assert file_size > 0
             assert len(file_hash) > 0
-            self.db[file_name]={"size": file_size, "hash": file_hash, "name": file_name, "uid": uid }
+            self.db[file_name]={"size": file_size, "hash": file_hash, "name": file_name, "uid": uid, "link": qiniu_setting["DOMAIN"]+file_name}
             self.write(json.dumps({"error": 0}))
         except Exception as e:
             self.write(json.dumps({"error": 1, "content": e.message}))
 
 class EduResourceListHandler(BaseHandler):
     def get(self):
-        self.write(json.dumps(self.db))
+        #self.write(json.dumps(self.db))
+        self.render('resource_list.html',db=self.db)
 
 
 def main():

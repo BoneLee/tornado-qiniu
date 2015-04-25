@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+	<link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+</head>
+<body>
+<div class="col-md-12 ">
+    <table class="table table-striped table-hover text-left" style="margin-top: 40px;">
+        <thead>
+        <tr>
+            <th class="col-md-4">Filename</th>
+            <th class="col-md-2">Size</th>
+            <th class="col-md-2">From</th>
+            <th class="col-md-6">Detail</th>
+        </tr>
+        </thead>
+        <tbody id="fsUploadProgress">
+        {% for key in db %}
+            <tr style="opacity: 1;" class="progressContainer" id="o_19jnmjtrb7f13fpcvh1tem17jn9">
+                <td class="progressName">{{ escape(key) }}</td>
+                <td class="progressFileSize">{{ db[key]["size"] }}</td>
+                <td class="progressFileSize">{{ db[key]["uid"] }}</td>
+                <td class="text-warning">
+                    Link: <a href="{{ db[key]["link"] }}">download</a>
+                </td>
+            </tr>
+        {% end %}
+        <!--
+        <tr style="opacity: 1;" class="progressContainer" id="o_19jnmjtrb7f13fpcvh1tem17jn9">
+            <td class="progressName">qiniudemo.zip</td>
+            <td class="progressFileSize">588 KB</td>
+            <td class="progressFileSize">UID</td>
+            <td class="text-warning">
+                Link here
+            </td>
+        </tr>
+        <tr style="opacity: 1;" class="progressContainer" id="o_19jnmql1ulpg12b81vouapq170ie">
+            <td class="progressName">manage.py</td>
+            <td class="progressFileSize">252 B</td>
+            <td class="progressFileSize">UID</td>
+            <td class="text-warning">
+                Link here
+            </td>
+        </tr>
+        -->
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
