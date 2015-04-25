@@ -10,13 +10,14 @@ import tornado.options
 import tornado.web
 import json
 
-define("port", default=8888, help="run on the given port", type=int)
+define("port", default=8666, help="run on the given port", type=int)
 
 qiniu_setting = {
     'ACCESS_KEY': '3rer6DB4jKt2CqSVzBjNmAC3NQe4s_LkK5PuOB4s',
     'SECRET_KEY': 'vmwWsF8_EEoiB9mJPYuKDKvoVvkGn0AwdfFBWXlM',
     'BUCKET_NAME': 'fbttest',
     'UPTOKEN_URL': '/uptoken',
+    'CALLBACK_URL': 'http://www.friendsbt.com:8666/res/education/upload',
     'DOMAIN': 'http://7xipy9.com1.z0.glb.clouddn.com/'
 }
 
@@ -58,11 +59,15 @@ class HomeHandler(BaseHandler):
     def get(self):
         self.render('index.html',domain=qiniu_setting["DOMAIN"], uptoken_url=qiniu_setting["UPTOKEN_URL"])
 
-
 class TokenHandler(BaseHandler):
     def get(self):
         auth = Auth(qiniu_setting['ACCESS_KEY'], qiniu_setting['SECRET_KEY'])
-        token = auth.upload_token(qiniu_setting['BUCKET_NAME'])
+        # if policy is None, you will add a callback in browser js client. else you will add processing logic in callback url server.
+        # policy = None
+        policy = {  "callbackUrl": qiniu_setting["CALLBACK_URL"],
+                    "callbackBody" : "file_name=$(fname)&file_hash=$(etag)&file_size=$(fsize)&uid=123"
+                 }
+        token = auth.upload_token(qiniu_setting['BUCKET_NAME'],policy=policy)
         self.write(json.dumps({'uptoken': token}))
 
 class EduResourceUploadHandler(BaseHandler):
@@ -87,7 +92,7 @@ class EduResourceUploadHandler(BaseHandler):
             assert file_size > 0
             assert len(file_hash) > 0
             self.db[file_name]={"size": file_size, "hash": file_hash, "name": file_name, "uid": uid, "link": qiniu_setting["DOMAIN"]+file_name}
-            self.write(json.dumps({"error": 0}))
+            self.write(json.dumps({"error": 0, "key":file_name, "hash":file_hash}))
         except Exception as e:
             self.write(json.dumps({"error": 1, "content": e.message}))
 
