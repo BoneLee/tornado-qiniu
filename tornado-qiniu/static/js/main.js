@@ -23,14 +23,14 @@ $(function() {
         // downtoken_url: '/downtoken',
         // unique_names: true,
         // save_key: true,
-        // x_vars: {
-        //     'id': '1234',
-        //     'time': function(up, file) {
-        //         var time = (new Date()).getTime();
-        //         // do something with 'time'
-        //         return time;
-        //     },
-        // },
+        x_vars: {
+             //'time': function(up, file) {
+             //    var time = (new Date()).getTime();
+             //    // do something with 'time'
+             //    return time;
+             //},
+            'uid': '1234'
+        },
         auto_start: true,
         init: {
             'FilesAdded': function(up, files) {

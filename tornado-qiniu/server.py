@@ -65,7 +65,7 @@ class TokenHandler(BaseHandler):
         # if policy is None, you will add a callback in browser js client. else you will add processing logic in callback url server.
         # policy = None
         policy = {  "callbackUrl": qiniu_setting["CALLBACK_URL"],
-                    "callbackBody" : "file_name=$(fname)&file_hash=$(etag)&file_size=$(fsize)&uid=123"
+                    "callbackBody" : "file_name=$(fname)&file_hash=$(etag)&file_size=$(fsize)&uid=$(x:uid)"
                  }
         token = auth.upload_token(qiniu_setting['BUCKET_NAME'],policy=policy)
         self.write(json.dumps({'uptoken': token}))
