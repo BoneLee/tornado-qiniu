@@ -67,7 +67,7 @@ $(function() {
                         progress.setComplete(up, info);
                     }else{
                         // TODO FIXME. USE alert window function better.
-                        var progress = new FileProgress(fileInfo["key"], 'fsUploadProgress');
+                        var progress = new FileProgress(file, 'fsUploadProgress');
                         progress.setError();
                         progress.setStatus(res["content"]);
                     }
@@ -79,6 +79,7 @@ $(function() {
             },
             'Error': function(up, err, errTip) {
                 $('table').show();
+                //console.log('hello man,a file is uploaded:'+JSON.stringify({"up": up, "err":err, "errTip": errTip}));
                 var progress = new FileProgress(err.file, 'fsUploadProgress');
                 progress.setError();
                 progress.setStatus(errTip);
