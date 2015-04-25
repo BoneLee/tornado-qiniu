@@ -5,6 +5,10 @@
 
 
 $(function() {
+    function now(){
+        return parseInt(new Date().getTime()/1000);
+    }
+
     var uploader = Qiniu.uploader({
         runtimes: 'html5,flash,html4',
         browse_button: 'pickfiles',
@@ -38,6 +42,20 @@ $(function() {
                 });
             },
             'BeforeUpload': function(up, file) {
+                /*************************************************/
+                // modify file name to forbid duplicated file names.
+                // NOT WORK WELL. TODO MAYBE RESTRICT THIS ON UI.
+                /*
+                var fileName = file["name"];
+                var index = fileName.lastIndexOf('.');
+                if (index >=0){
+                    fileName = fileName.substr(0,index)+"_"+now()+fileName.substr(index);
+                }
+                file["name"] = fileName;
+                //console.log("file:"+JSON.stringify(file));
+                */
+                /*************************************************/
+
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
                 if (up.runtime === 'html5' && chunk_size) {
@@ -45,6 +63,7 @@ $(function() {
                 }
             },
             'UploadProgress': function(up, file) {
+                //console.log("file progress:"+JSON.stringify(file));
                 var progress = new FileProgress(file, 'fsUploadProgress');
                 var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
                 progress.setProgress(file.percent + "%", up.total.bytesPerSec, chunk_size);
@@ -54,6 +73,7 @@ $(function() {
                 $('#success').show();
             },
             'FileUploaded': function(up, file, info) {
+                /*************************************************/
                 // "file":{"id":"o_19jnarsaknlqmcicup1pvpv0g9","name":"5DC87A00d01","type":"","size":4281655,"origSize":4281655,"loaded":4281655,"percent":100,"status":5,"lastModifiedDate":"2011-05-14T10:04:14.000Z"},
                 // "info":"{\"hash\":\"llttAJNZysYH4JlDiuIj6zn1c5Bw\",\"key\":\"5DC87A00d01\"}"
                 // callback is here. when file upload complete.
@@ -72,6 +92,7 @@ $(function() {
                         progress.setStatus(res["content"]);
                     }
                 });
+                /*************************************************/
 
                 //console.log('hello man,a file is uploaded:'+JSON.stringify({"up": up, "file":file, "info": info}));
                 //var progress = new FileProgress(file, 'fsUploadProgress');
